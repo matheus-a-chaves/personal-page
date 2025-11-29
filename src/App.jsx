@@ -109,46 +109,64 @@ function App() {
             <Menu className="size-5" onClick={() => setOpen(true)} />
           </button>
         </div>
-        {open && (
-          <div className="md:hidden">
-            <div
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40"
-              onClick={() => setOpen(false)}
-            >
-              <div
-                className="fixed right-0 top-0 h-full w-80 bg-black border-l border-white/10 p-6 z-50"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="flex justify-between items-center mb-8">
-                  <div className="flex items-center gap-2">
-                    <Code2 className="size-6 text-fuchsia-500" />
-                    <span className="font-bold">Matheus Chaves</span>
-                  </div>
-                  <button className="p-2 rounded-lg hover:bg-white/5">
-                    <X className="size-5" onClick={() => setOpen(false)} />
-                  </button>
-                </div>
-                <nav className="flex flex-col gap-6">
-                  {navLinks.map((l) => (
-                    <a
-                      key={l.href}
-                      href={l.href}
-                      className={`text-lg hover:text-fuchsia-400 transition-colors ${
-                        activeSection === l.href
-                          ? "text-fuchsia-500 font-semibold"
-                          : ""
-                      }`}
-                      onClick={(e) => handleNavClick(e, l.href)}
-                    >
-                      {l.label}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            </div>
-          </div>
-        )}
       </header>
+
+      {/* Menu Mobile com Overlay */}
+      {open && (
+        <div className="md:hidden fixed inset-0 z-[9999]">
+          {/* Overlay - fundo escuro que cobre toda a tela */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={() => setOpen(false)}
+          />
+
+          {/* Menu lateral */}
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="absolute right-0 top-0 h-full w-60 bg-black border-l border-white/10 p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-8">
+              <div className="flex items-center gap-2">
+                <Code2 className="size-6 text-fuchsia-500" />
+                <span className="font-bold">Matheus Chaves</span>
+              </div>
+              <button
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+            <nav className="flex flex-col gap-6">
+              {navLinks.map((l, index) => (
+                <motion.a
+                  key={l.href}
+                  href={l.href}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`text-lg hover:text-fuchsia-400 transition-colors ${
+                    activeSection === l.href
+                      ? "text-fuchsia-500 font-semibold"
+                      : ""
+                  }`}
+                  onClick={(e) => handleNavClick(e, l.href)}
+                >
+                  {l.label}
+                </motion.a>
+              ))}
+            </nav>
+          </motion.div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section id="home" className="relative overflow-hidden py-20 md:py-26">
